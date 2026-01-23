@@ -1,41 +1,52 @@
-package com.app.coneccta.domain.candidato;
+package com.app.coneccta.domain.enderecos;
 
+import com.app.coneccta.domain.user.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.NaturalId;
 
-
-
-import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.UUID;
 
-@Entity(name = "Candidato")
-@Table(name = "candidatos")
+@Entity(name = "Endereco")
+@Table(name = "enderecos")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Candidato {
+public class Endereco {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
-    @Column(nullable = false, unique = true, updatable = false)
-    private UUID uuid;
+    private Long id;
 
-    @Column(name = "user_id", nullable = false, unique = true)
-    private UUID userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private UUID user;
 
-    @Column(unique = true, nullable = false)
-    private String cpf;
+    @Column(nullable = false)
+    private String cep;
 
-    @Column(name = "data_nascimento", nullable = false )
-    private LocalDate dataNascimento;
+    @Column(nullable = false)
+    private String logradouro;
 
-    private String descricao;
+    @Column(nullable = false)
+    private String cidade;
+
+    @Column(nullable = false)
+    private String bairro;
+
+    @Column(nullable = false)
+    private String numero;
+
+    @Column(nullable = false)
+    private String uf;
+
+    private boolean principal = true;
+
 
     @Column(name = "created_at", columnDefinition = "DATETIME")
     private OffsetDateTime createdAt;
@@ -48,5 +59,4 @@ public class Candidato {
         this.createdAt = OffsetDateTime.now(ZoneOffset.UTC);
         this.updatedAt = OffsetDateTime.now(ZoneOffset.UTC);
     }
-
 }
