@@ -62,23 +62,36 @@ public class User extends DatesBase implements UserDetails {
         return empresaUser;
     }
     public static User  createUserCandidato(UserDTO userDTO) {
-        User empresaUser = new User();
-        empresaUser.setNome(userDTO.name());
-        empresaUser.setUuid(UUID.randomUUID());
-        empresaUser.setEmail(userDTO.email());
-        empresaUser.setPassword(userDTO.password());
-        empresaUser.setTelefone(userDTO.telefone());
-        empresaUser.setRole(Role.CANDIDATO);
+        User userCandidato = new User();
+        userCandidato.setNome(userDTO.name());
+        userCandidato.setUuid(UUID.randomUUID());
+        userCandidato.setEmail(userDTO.email());
+        userCandidato.setPassword(userDTO.password());
+        userCandidato.setTelefone(userDTO.telefone());
+        userCandidato.setRole(Role.CANDIDATO);
         if (userDTO.Enderecos() != null){
-            userDTO.Enderecos().forEach(empresaUser::addEndereco);
+            userDTO.Enderecos().forEach(userCandidato::addEndereco);
         }
 
-        return empresaUser;
+        return userCandidato;
     }
 
     public void addEndereco(Endereco endereco){
        this.enderecos.add(endereco);
        endereco.setUser(this);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "uuid=" + uuid +
+                ", nome='" + nome + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", telefone='" + telefone + '\'' +
+                ", role=" + role +
+                ", enderecos=" + enderecos +
+                '}';
     }
 
     @Override

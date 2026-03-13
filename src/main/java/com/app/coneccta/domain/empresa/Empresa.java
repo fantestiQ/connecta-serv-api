@@ -41,6 +41,18 @@ public class Empresa extends DatesBase {
 
     private String descricao;
 
+    @Override
+    public String toString() {
+        return "Empresa{" +
+                "uuid=" + uuid +
+                ", user=" + user +
+                ", nomeFantasia='" + nomeFantasia + '\'' +
+                ", cnpj='" + cnpj + '\'' +
+                ", inscricaoEstadual='" + inscricaoEstadual + '\'' +
+                ", descricao='" + descricao + '\'' +
+                '}';
+    }
+
     public static Empresa createEmpresa(EmpresaDTO empresaDTO, User user){
         Empresa empresa = new Empresa();
         empresa.setUuid(UUID.randomUUID());

@@ -41,14 +41,25 @@ public class Candidato extends DatesBase {
     private String descricao;
 
 
-    public static Candidato createCandidato(CanditatoDTO canditatoDTO, User user){
+    public static Candidato createCandidato(CandidatoDTO candidatoDTO, User user){
         Candidato candidato = new Candidato();
 
         candidato.setUser(user);
         candidato.setUuid(UUID.randomUUID());
-        candidato.setCpf(canditatoDTO.cpf());
-        candidato.setDataNascimento(canditatoDTO.dataNascimento());
-        candidato.setDescricao(canditatoDTO.descricao());
+        candidato.setCpf(candidatoDTO.cpf());
+        candidato.setDataNascimento(candidatoDTO.dataNascimento());
+        candidato.setDescricao(candidatoDTO.descricao());
         return candidato;
+    }
+
+    @Override
+    public String toString() {
+        return "Candidato{" +
+                "uuid=" + uuid +
+                ", user=" + user +
+                ", cpf='" + cpf + '\'' +
+                ", dataNascimento=" + dataNascimento +
+                ", descricao='" + descricao + '\'' +
+                '}';
     }
 }

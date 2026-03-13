@@ -6,9 +6,6 @@ import jakarta.validation.constraints.NotNull;
 
 public record EnderecoDTO(
 
-        @NotNull
-        UserDTO userDTO,
-
          @NotBlank(message = "O campo cep é obrigatório!")
          String cep,
 

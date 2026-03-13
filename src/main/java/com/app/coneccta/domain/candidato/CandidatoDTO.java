@@ -10,7 +10,7 @@ import org.hibernate.validator.constraints.br.CPF;
 import java.time.LocalDate;
 
 
-public record CanditatoDTO(
+public record CandidatoDTO(
         @CPF(message = "CPF inválido")
         @NotBlank(message = "O campo CPF é obrigatório!")
         String cpf,

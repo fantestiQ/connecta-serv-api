@@ -2,7 +2,7 @@ create table candidatos (
 
 user_id BINARY(16) not null unique,
 uuid BINARY(16) unique not null,
-cpf varchar(11) unique not null,
+cpf varchar(14) unique not null,
 data_nascimento date not null,
 descricao text,
 created_at DATETIME,
