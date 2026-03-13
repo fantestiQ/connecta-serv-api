@@ -1,7 +1,8 @@
 create table enderecos(
 
 id bigint auto_increment not null,
-user_id char(36) not null,
+user_id BINARY(16) not null,
+
 cep varchar (10) not null,
 logradouro varchar(150)not null,
 cidade varchar (100) not null,

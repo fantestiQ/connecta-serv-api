@@ -1,7 +1,7 @@
 create table empresas(
 
-user_id char (36) not null unique,
-uuid char (36) not null unique ,
+user_id BINARY(16) not null unique,
+uuid BINARY(16) not null unique ,
 
 nome_fantasia varchar(128) not null,
 cnpj varchar(11) unique not null,
@@ -12,7 +12,5 @@ updated_at DATETIME,
 
 primary key(uuid),
 
-constraint fk_user_id foreign key(user_id) references users(uuid)
-
-
-)
+constraint fkey_user_id foreign key(user_id) references users(uuid)
+);

@@ -1,8 +1,14 @@
 package com.app.coneccta.domain.enderecos;
 
+import com.app.coneccta.domain.user.UserDTO;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record EnderecoDTO(
+
+        @NotNull
+        UserDTO userDTO,
+
          @NotBlank(message = "O campo cep é obrigatório!")
          String cep,
 

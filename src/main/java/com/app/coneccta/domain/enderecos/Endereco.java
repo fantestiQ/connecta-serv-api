@@ -1,14 +1,9 @@
 package com.app.coneccta.domain.enderecos;
 
+import com.app.coneccta.domain.listeners.DatesBase;
 import com.app.coneccta.domain.user.User;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.annotations.NaturalId;
-
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.UUID;
 
 @Entity(name = "Endereco")
 @Table(name = "enderecos")
@@ -16,8 +11,8 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Endereco {
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+public class Endereco extends DatesBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +20,7 @@ public class Endereco {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private UUID user;
+    private User user;
 
     @Column(nullable = false)
     private String cep;
@@ -47,16 +42,17 @@ public class Endereco {
 
     private boolean principal = true;
 
+    public static Endereco  createEndereco(EnderecoDTO enderecoDTO, User user) {
+        Endereco endereco= new Endereco();
 
-    @Column(name = "created_at", columnDefinition = "DATETIME")
-    private OffsetDateTime createdAt;
+        endereco.setUser(user);
+        endereco.setCep(enderecoDTO.cep());
+        endereco.setLogradouro(enderecoDTO.logradouro());
+        endereco.setCidade(enderecoDTO.cidade());
+        endereco.setBairro(enderecoDTO.bairro());
+        endereco.setNumero(enderecoDTO.numero());
+        endereco.setUf(enderecoDTO.uf());
 
-    @Column(name = "updated_at",columnDefinition = "DATETIME")
-    private OffsetDateTime updatedAt;
-
-    @PrePersist
-    public void prePersist() {
-        this.createdAt = OffsetDateTime.now(ZoneOffset.UTC);
-        this.updatedAt = OffsetDateTime.now(ZoneOffset.UTC);
+        return endereco;
     }
 }

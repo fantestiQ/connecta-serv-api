@@ -1,5 +1,7 @@
 package com.app.coneccta.domain.candidato;
 
+import com.app.coneccta.domain.listeners.DatesBase;
+import com.app.coneccta.domain.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.NaturalId;
@@ -17,17 +19,18 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Candidato {
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+public class Candidato extends DatesBase {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @EqualsAndHashCode.Include
-    @Column(nullable = false, unique = true, updatable = false)
+    @Column(nullable = false, unique = true, updatable = false, columnDefinition = "BINARY(16)")
     private UUID uuid;
 
-    @Column(name = "user_id", nullable = false, unique = true)
-    private UUID userId;
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    private User user;
 
     @Column(unique = true, nullable = false)
     private String cpf;
@@ -37,16 +40,15 @@ public class Candidato {
 
     private String descricao;
 
-    @Column(name = "created_at", columnDefinition = "DATETIME")
-    private OffsetDateTime createdAt;
 
-    @Column(name = "updated_at",columnDefinition = "DATETIME")
-    private OffsetDateTime updatedAt;
+    public static Candidato createCandidato(CanditatoDTO canditatoDTO, User user){
+        Candidato candidato = new Candidato();
 
-    @PrePersist
-    public void prePersist() {
-        this.createdAt = OffsetDateTime.now(ZoneOffset.UTC);
-        this.updatedAt = OffsetDateTime.now(ZoneOffset.UTC);
+        candidato.setUser(user);
+        candidato.setUuid(UUID.randomUUID());
+        candidato.setCpf(canditatoDTO.cpf());
+        candidato.setDataNascimento(canditatoDTO.dataNascimento());
+        candidato.setDescricao(canditatoDTO.descricao());
+        return candidato;
     }
-
 }

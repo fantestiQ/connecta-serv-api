@@ -1,6 +1,6 @@
 create table users(
 
-uuid char(36) not null unique,
+uuid BINARY(16) not null unique,
 nome varchar(128) not null,
 email varchar(128) not null unique,
 password varchar(128) not null,

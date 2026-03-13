@@ -1,5 +1,8 @@
 package com.app.coneccta.domain.empresa;
 
+import com.app.coneccta.domain.candidato.Candidato;
+import com.app.coneccta.domain.listeners.DatesBase;
+import com.app.coneccta.domain.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.NaturalId;
@@ -15,22 +18,20 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Empresa {
-
-
-
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+public class Empresa extends DatesBase {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @EqualsAndHashCode.Include
-    @Column(nullable = false, unique = true, updatable = false)
+    @Column(nullable = false, unique = true, updatable = false, columnDefinition = "BINARY(16)")
     private UUID uuid;
 
-    @Column(name = "user_id", nullable = false, unique = true)
-    private UUID userId;
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    private User user;
 
-    @Column(nullable = false)
-    private String nome_fantasia;
+    @Column(name = "nome_fantasia", nullable = false)
+    private String nomeFantasia;
 
     @Column(unique = true, nullable = false)
     private String cnpj;
@@ -40,17 +41,16 @@ public class Empresa {
 
     private String descricao;
 
+    public static Empresa createEmpresa(EmpresaDTO empresaDTO, User user){
+        Empresa empresa = new Empresa();
+        empresa.setUuid(UUID.randomUUID());
+        empresa.setUser(user);
+        empresa.setCnpj(empresaDTO.cnpj());
+        empresa.setNomeFantasia(empresaDTO.nome_fantasia());
+        empresa.setInscricaoEstadual(empresaDTO.inscricaoEstadual());
+        empresa.setDescricao(empresaDTO.descricao());
 
-    @Column(name = "created_at", columnDefinition = "DATETIME")
-    private OffsetDateTime createdAt;
 
-    @Column(name = "updated_at",columnDefinition = "DATETIME")
-    private OffsetDateTime updatedAt;
-
-    @PrePersist
-    public void prePersist() {
-        this.createdAt = OffsetDateTime.now(ZoneOffset.UTC);
-        this.updatedAt = OffsetDateTime.now(ZoneOffset.UTC);
+        return empresa;
     }
-
 }

@@ -27,8 +27,9 @@ public record UserDTO(
         @Size(min = 11 , max = 15)
         String telefone,
 
+
         @Valid
         @NotNull(message = "A informação de endereço é necessária!")
-        List<EnderecoDTO> EnderecoDTO,
-        Role role){
+        List<Endereco> Enderecos
+        ){
 }

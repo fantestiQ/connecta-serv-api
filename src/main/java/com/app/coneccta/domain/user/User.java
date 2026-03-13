@@ -2,14 +2,12 @@ package com.app.coneccta.domain.user;
 
 
 import com.app.coneccta.domain.enderecos.Endereco;
+import com.app.coneccta.domain.listeners.DatesBase;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.NaturalId;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -17,17 +15,17 @@ import java.util.UUID;
 
 @Table(name = "users")
 @Entity(name = "User")
+@Setter(AccessLevel.PRIVATE)
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class User implements UserDetails {
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+public class User extends DatesBase implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @EqualsAndHashCode.Include
-    @Column(nullable = false, unique = true, updatable = false)
+    @Column(nullable = false, unique = true, updatable = false, columnDefinition = "BINARY(16)")
     private UUID uuid;
 
     @Column(nullable = false)
@@ -42,23 +40,45 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String telefone;
 
-
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<Endereco> enderecos = new ArrayList<>();
 
-    @Column(name = "created_at", columnDefinition = "DATETIME")
-    private OffsetDateTime createdAt;
+   public static User  createUserEmpresa(UserDTO userDTO) {
+        User empresaUser = new User();
+        empresaUser.setNome(userDTO.name()) ;
+        empresaUser.setUuid(UUID.randomUUID());
+        empresaUser.setEmail(userDTO.email());
+        empresaUser.setPassword(userDTO.password());
+        empresaUser.setTelefone(userDTO.telefone());
+        empresaUser.setRole(Role.EMPRESA);
 
-    @Column(name = "updated_at",columnDefinition = "DATETIME")
-    private OffsetDateTime updatedAt;
+        if (userDTO.Enderecos() != null){
+            userDTO.Enderecos().forEach(empresaUser::addEndereco);
+        }
 
-    @PrePersist
-    public void prePersist() {
-        this.createdAt = OffsetDateTime.now(ZoneOffset.UTC);
-        this.updatedAt = OffsetDateTime.now(ZoneOffset.UTC);
+        return empresaUser;
+    }
+    public static User  createUserCandidato(UserDTO userDTO) {
+        User empresaUser = new User();
+        empresaUser.setNome(userDTO.name());
+        empresaUser.setUuid(UUID.randomUUID());
+        empresaUser.setEmail(userDTO.email());
+        empresaUser.setPassword(userDTO.password());
+        empresaUser.setTelefone(userDTO.telefone());
+        empresaUser.setRole(Role.CANDIDATO);
+        if (userDTO.Enderecos() != null){
+            userDTO.Enderecos().forEach(empresaUser::addEndereco);
+        }
+
+        return empresaUser;
+    }
+
+    public void addEndereco(Endereco endereco){
+       this.enderecos.add(endereco);
+       endereco.setUser(this);
     }
 
     @Override
